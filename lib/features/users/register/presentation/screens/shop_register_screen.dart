@@ -120,7 +120,7 @@ class SocialRegisterScreen extends StatelessWidget {
                                   if (cubit.formKey.currentState!.validate()) {
                                     cubit.registerUser(
                                       email: cubit.emailController.text,
-                                      password: cubit.phoneController.text,
+                                      password: cubit.passwordController.text,
                                     );
                                   }
                                 },
