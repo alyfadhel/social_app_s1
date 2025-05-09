@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_button.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_from_field.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_txt_button.dart';
+import 'package:social_app_sw1/core/shared/widgets/toast_state.dart';
 import 'package:social_app_sw1/features/users/login/presentation/screens/shop_login_screen.dart';
 import 'package:social_app_sw1/features/users/register/presentation/controller/cubit.dart';
 import 'package:social_app_sw1/features/users/register/presentation/controller/state.dart';
-
 
 class SocialRegisterScreen extends StatelessWidget {
   const SocialRegisterScreen({super.key});
@@ -22,6 +22,12 @@ class SocialRegisterScreen extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => SocialLoginScreen()),
+            );
+          }
+          if (state is SocialRegisterErrorState) {
+            showToastState(
+                msg: state.error,
+                state: ToastState.error,
             );
           }
         },
@@ -121,10 +127,12 @@ class SocialRegisterScreen extends StatelessWidget {
                                     cubit.registerUser(
                                       email: cubit.emailController.text,
                                       password: cubit.passwordController.text,
+                                      phone: cubit.phoneController.text,
+                                      name: cubit.nameController.text,
                                     );
                                   }
                                 },
-                                text: 'login',
+                                text: 'register',
                                 style: Theme.of(context).textTheme.titleLarge!
                                     .copyWith(color: Colors.white),
                               ),

@@ -1,14 +1,17 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app_sw1/core/layout/social_layout.dart';
+import 'package:social_app_sw1/core/shared/network/local/cache_helper.dart';
+import 'package:social_app_sw1/core/shared/themes/controller/cubit.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_button.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_from_field.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_txt_button.dart';
+import 'package:social_app_sw1/core/shared/widgets/toast_state.dart';
 import 'package:social_app_sw1/features/users/login/presentation/controller/cubit.dart';
 import 'package:social_app_sw1/features/users/login/presentation/controller/state.dart';
 import 'package:social_app_sw1/features/users/register/presentation/screens/shop_register_screen.dart';
-
-
+import 'package:social_app_sw1/main.dart';
 
 class SocialLoginScreen extends StatelessWidget {
   const SocialLoginScreen({super.key});
@@ -18,13 +21,32 @@ class SocialLoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SocialLoginCubit(),
       child: BlocConsumer<SocialLoginCubit, SocialLoginStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is SocialLoginErrorState) {
+            showToastState(msg: state.error, state: ToastState.error);
+          }
+
+          if (state is SocialLoginSuccessState) {
+            CacheHelper.setData(key: 'uId', value: state.uId).then((value) {
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => MyApp(
+                          isDark: ThemeModeCubit.get(context).isDark,
+                          startWidget: SocialLayout(),
+                        ),
+                  ),
+                );
+              }
+            });
+          }
+        },
         builder: (context, state) {
           var cubit = SocialLoginCubit.get(context);
           return Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-            ),
+            appBar: AppBar(automaticallyImplyLeading: false),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Form(

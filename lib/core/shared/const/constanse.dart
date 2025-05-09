@@ -11,3 +11,5 @@ String productEndPoint(int id) => 'products/$id';
 String? token = '';
 
 late String language;
+
+String? uId = '';

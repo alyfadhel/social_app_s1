@@ -82,6 +82,9 @@ ThemeData getDarkMode()=>ThemeData(
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: Colors.deepOrange,
   ),
+  cardTheme: CardTheme(
+    color: HexColor('#1B2529',),
+  ),
 );
 
 ThemeData getLightMode()=>ThemeData(
@@ -163,5 +166,8 @@ ThemeData getLightMode()=>ThemeData(
   ),
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: Colors.blue,
+  ),
+  cardTheme: CardTheme(
+    color: Colors.white,
   ),
 );
