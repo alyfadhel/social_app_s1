@@ -265,35 +265,29 @@ class SocialCubit extends Cubit<SocialStates> {
   List<String> postId = [];
   List<int> likes = [];
 
-  void getPosts() {
-    posts = [];
-    emit(SocialGetPostsLoadingState());
-
+  void getPosts()
+  {
     FirebaseFirestore.instance
         .collection('posts')
         .get()
-        .then((value) {
-          value.docs.forEach((element) {
-            element.reference
-                .collection('likes')
-                .get()
-                .then((value) {
-                  likes.add(value.docs.length);
-                  postId.add(element.id);
-                  posts.add(PostModel.fromJson(element.data()));
-            })
-                .catchError((error) {
-              emit(SocialGetPostsErrorState(error.toString()));
-              debugPrint(error.toString());
-            });
-            debugPrint('The Posts Is : ${element.data()}');
-            emit(SocialGetPostsSuccessState());
-          });
-        })
-        .catchError((error) {
-          emit(SocialGetPostsErrorState(error.toString()));
-          debugPrint(error.toString());
+        .then((value){
+      value.docs.forEach((element){
+        element.reference.collection('likes').get().then((value){
+
+          likes.add(value.docs.length);
+          postId.add(element.id);
+          posts.add(PostModel.fromJson(element.data()));
+          debugPrint('The posts is: ${element.data()}');
+          emit(SocialGetNumberLikePostsSuccessState());
+        }).catchError((error){
+          emit(SocialGetNumberLikePostsErrorState(error.toString()));
         });
+      });
+      emit(SocialGetPostsSuccessState());
+    })
+        .catchError((error){
+      emit(SocialGetPostsErrorState(error.toString()));
+    });
   }
 
   void likePosts(String postId) {
