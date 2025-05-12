@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
               (context) =>
                   ThemeModeCubit()..changeThemeMode(fromShared: isDark),
         ),
-        BlocProvider(create: (context) => SocialCubit()..getUser(),),
+        BlocProvider(create: (context) => SocialCubit()..getUser()..getPosts(),),
       ],
       child: BlocConsumer<ThemeModeCubit, ThemeModeStates>(
         listener: (context, state) {},

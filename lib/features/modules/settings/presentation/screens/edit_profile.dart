@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app_sw1/core/layout/controller/cubit.dart';
 import 'package:social_app_sw1/core/layout/controller/state.dart';
 import 'package:social_app_sw1/core/shared/themes/controller/cubit.dart';
 import 'package:social_app_sw1/core/shared/themes/styles/icon_broken.dart';
+import 'package:social_app_sw1/core/shared/widgets/my_button.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_from_field.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_txt_button.dart';
 
@@ -36,7 +38,13 @@ class EditProfile extends StatelessWidget {
             ),
             actions: [
               MyTxtButton(
-                onPressed: () {},
+                onPressed: () {
+                  cubit.updateUser(
+                    name: cubit.nameController.text,
+                    phone: cubit.phoneController.text,
+                    bio: cubit.bioController.text,
+                  );
+                },
                 text: 'update',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color:
@@ -52,6 +60,10 @@ class EditProfile extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  if (state is SocialUserUpdateLoadingState)
+                    LinearProgressIndicator(),
+                  if (state is SocialUserUpdateLoadingState)
+                    SizedBox(height: 20.0),
                   SizedBox(
                     height: 250.0,
                     child: Stack(
@@ -70,9 +82,14 @@ class EditProfile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: coverImage == null ? NetworkImage(
-                                      userModel.cover,
-                                    ) : FileImage(coverImage),
+                                    image:
+                                        coverImage == null
+                                            ? CachedNetworkImageProvider(
+                                              userModel.cover,
+                                              errorListener:
+                                                  (p0) => Icons.error,
+                                            )
+                                            : FileImage(coverImage),
                                   ),
                                 ),
                               ),
@@ -105,9 +122,13 @@ class EditProfile extends StatelessWidget {
                               radius: 65.0,
                               child: CircleAvatar(
                                 radius: 62,
-                                backgroundImage: profileImage == null ? NetworkImage(
-                                  userModel.image,
-                                ) : FileImage(profileImage),
+                                backgroundImage:
+                                    profileImage == null
+                                        ? CachedNetworkImageProvider(
+                                          userModel.image,
+                                          errorListener: (p0) => Icons.error,
+                                        )
+                                        : FileImage(profileImage),
                               ),
                             ),
                             IconButton(
@@ -133,6 +154,53 @@ class EditProfile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 40.0),
+                  if (cubit.profileImage != null || cubit.coverImage != null)
+                    Row(
+                      children: [
+                        if (cubit.coverImage != null)
+                          Expanded(
+                            child: MyButton(
+                              onPressed: () {
+                                cubit.uploadCoverImage(
+                                  name: cubit.nameController.text,
+                                  phone: cubit.phoneController.text,
+                                  bio: cubit.bioController.text,
+                                );
+                              },
+                              background:
+                                  ThemeModeCubit.get(context).isDark
+                                      ? Colors.blue
+                                      : Colors.deepOrange,
+                              text: 'Update cover',
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        SizedBox(width: 10.0),
+                        if (cubit.profileImage != null)
+                          Expanded(
+                            child: MyButton(
+                              onPressed: () {
+                                cubit.uploadProfileImage(
+                                  name: cubit.nameController.text,
+                                  phone: cubit.phoneController.text,
+                                  bio: cubit.bioController.text,
+                                );
+                              },
+                              background:
+                                  ThemeModeCubit.get(context).isDark
+                                      ? Colors.blue
+                                      : Colors.deepOrange,
+                              text: 'Update Profile',
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  SizedBox(height: 30.0),
                   MyFromField(
                     controller: cubit.nameController,
                     type: TextInputType.text,
@@ -140,9 +208,7 @@ class EditProfile extends StatelessWidget {
                     text: 'name',
                     radius: 10.0,
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
+                  SizedBox(height: 20.0),
                   MyFromField(
                     controller: cubit.phoneController,
                     type: TextInputType.phone,
@@ -150,9 +216,7 @@ class EditProfile extends StatelessWidget {
                     text: 'phone',
                     radius: 10.0,
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
+                  SizedBox(height: 20.0),
                   MyFromField(
                     controller: cubit.bioController,
                     type: TextInputType.text,

@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app_sw1/core/layout/social_layout.dart';
+import 'package:social_app_sw1/core/shared/const/constanse.dart';
 import 'package:social_app_sw1/core/shared/network/local/cache_helper.dart';
 import 'package:social_app_sw1/core/shared/themes/controller/cubit.dart';
 import 'package:social_app_sw1/core/shared/widgets/my_button.dart';
@@ -41,6 +42,7 @@ class SocialLoginScreen extends StatelessWidget {
                 );
               }
             });
+            uId = state.uId;
           }
         },
         builder: (context, state) {

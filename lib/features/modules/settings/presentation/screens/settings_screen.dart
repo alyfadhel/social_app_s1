@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app_sw1/core/layout/controller/cubit.dart';
@@ -35,8 +36,9 @@ class SettingsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                              'https://img.freepik.com/premium-photo/trees-growing-forest_1048944-30368869.jpg?w=740',
+                            image: CachedNetworkImageProvider(
+                              userModel.cover,
+                              errorListener: (p0) => Icons.error,
                             ),
                           ),
                         ),
@@ -48,8 +50,9 @@ class SettingsScreen extends StatelessWidget {
                       radius: 65.0,
                       child: CircleAvatar(
                         radius: 62,
-                        backgroundImage: NetworkImage(
-                          'https://img.freepik.com/free-photo/fun-party-with-dj_23-2151108197.jpg?t=st=1746777810~exp=1746781410~hmac=b691376821e6194dd0d26805125a9376b4afcea5306e7d98a59a5a4fe9a89339&w=740',
+                        backgroundImage: CachedNetworkImageProvider(
+                          userModel.image,
+                          errorListener: (p0) => Icons.error,
                         ),
                       ),
                     ),
